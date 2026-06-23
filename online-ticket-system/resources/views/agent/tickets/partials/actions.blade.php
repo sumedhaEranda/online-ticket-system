@@ -1,0 +1,1 @@
+<a class="btn btn-sm btn-outline-primary" href="{{ url('/agent/ticket/'.$ticket->id) }}">Open</a>
