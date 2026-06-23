@@ -1,0 +1,211 @@
+:root{
+  --sidebar-bg:#17232b;
+  --sidebar-accent:#0f1a20;
+  --accent:#0ea5a3;
+  --text-muted: #bfc9d2;
+  --link-color: #dbe8f5;
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 72px;
+}
+html,body{height:100%;}
+body{min-height:100vh;background:#f4f7fb;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial;}
+
+/* Navbar */
+.navbar { z-index: 1100; }
+
+/* Sidebar */
+.sidebar {
+  position:fixed;
+  top:56px;
+  left:0;
+  bottom:0;
+  width:var(--sidebar-width);
+  background:linear-gradient(180deg,var(--sidebar-bg),#0f2a36);
+  color:var(--link-color);
+  overflow:hidden; /* ensure labels clip cleanly */
+  transition: width .26s cubic-bezier(.2,.8,.2,1), background .2s ease;
+  box-shadow: 2px 0 8px rgba(10,15,20,0.06);
+  padding-bottom:2rem;
+}
+.sidebar.collapsed { width: var(--sidebar-collapsed); }
+.sidebar .brand {
+  height:64px;
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  padding:0 1rem;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  font-weight:700;
+  background:var(--sidebar-accent);
+}
+.brand .logo {
+  width:36px;
+  height:36px;
+  background:linear-gradient(135deg,var(--accent),#2563eb);
+  border-radius:8px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-weight:700;
+}
+.sidebar .user {
+  padding:12px 12px;
+  display:flex;
+  gap:.75rem;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.sidebar .user .avatar {
+  width:40px;height:40px;border-radius:8px;background:#0b1720;display:inline-flex;align-items:center;justify-content:center;color:var(--link-color);
+}
+.sidebar .user .meta { line-height:1; }
+.sidebar .user .meta .name { font-weight:600; color:#fff; font-size:0.95rem; }
+.sidebar .user .meta .email { color:var(--text-muted); font-size:0.8rem; }
+
+.sidebar nav { padding-top:8px; }
+.sidebar .nav-link {
+  color:var(--link-color);
+  padding:12px 14px;
+  display:flex;
+  gap:.75rem;
+  align-items:center;
+  border-left:4px solid transparent;
+  transition:all .15s ease;
+  font-size:0.95rem;
+}
+.sidebar .nav-link .bi { font-size:1.05rem; width:20px; text-align:center; }
+.sidebar .nav-link:hover { background:rgba(255,255,255,0.02); color:#fff; text-decoration:none; }
+.sidebar .nav-link.active {
+  background:linear-gradient(90deg, rgba(14,165,163,0.08), rgba(14,165,163,0));
+  color:#fff;
+  border-left-color:var(--accent);
+}
+
+/* collapse small view: hide labels */
+.sidebar.collapsed .nav-link span.label,
+.sidebar.collapsed .user .meta { display:none; }
+.sidebar.collapsed .brand .brand-text { display:none; }
+.sidebar.collapsed .brand { justify-content:center; }
+
+/* main content shift */
+.main-wrapper { margin-top:56px; margin-left:var(--sidebar-width); padding:28px; transition:margin-left .26s cubic-bezier(.2,.8,.2,1); }
+.sidebar.collapsed ~ .main-wrapper { margin-left: var(--sidebar-collapsed); }
+
+@media (max-width:991.98px){
+  .sidebar { display:none; }
+  .main-wrapper { margin-left:0; padding:16px; }
+}
+
+/* small helpers */
+.collapse-toggle { background:transparent;border:0;color:var(--link-color);padding:8px;margin-left:auto; }
+.sidebar-footer { position:absolute; bottom:12px; left:12px; right:12px; }
+.badge-pill { font-size:0.72rem; }
+
+/* Add smoother sidebar animation and hide/show label transitions */
+.sidebar {
+  position:fixed;
+  top:56px;
+  left:0;
+  bottom:0;
+  width:var(--sidebar-width);
+  background:linear-gradient(180deg,var(--sidebar-bg),#0f2a36);
+  color:var(--link-color);
+  overflow:hidden; /* ensure labels clip cleanly */
+  transition: width .26s cubic-bezier(.2,.8,.2,1), background .2s ease;
+  box-shadow: 2px 0 8px rgba(10,15,20,0.06);
+  padding-bottom:2rem;
+}
+
+/* Animate labels / meta opacity & position */
+.sidebar .brand-text,
+.sidebar .user .meta,
+.sidebar .nav-link .label,
+.sidebar .sidebar-footer {
+  transition: opacity .18s ease, transform .22s ease;
+  transform-origin: left center;
+}
+
+/* Collapsed state */
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed);
+}
+
+/* Hide labels smoothly when collapsed */
+.sidebar.collapsed .brand-text,
+.sidebar.collapsed .user .meta,
+.sidebar.collapsed .nav-link .label,
+.sidebar.collapsed .sidebar-footer {
+  opacity: 0;
+  transform: translateX(-8px);
+  pointer-events: none;
+}
+
+/* Ensure icon rotates smoothly */
+.collapse-toggle i {
+  transition: transform .26s ease;
+}
+.sidebar.collapsed .collapse-toggle i {
+  transform: rotate(180deg);
+}
+
+/* Main content shift should animate */
+.main-wrapper {
+  margin-top:56px;
+  margin-left:var(--sidebar-width);
+  padding:28px;
+  transition: margin-left .26s cubic-bezier(.2,.8,.2,1);
+}
+.sidebar.collapsed ~ .main-wrapper {
+  margin-left: var(--sidebar-collapsed);
+}
+
+/* Mobile overrides - ensure sidebar hidden and content full-width on small screens */
+@media (max-width: 991.98px) {
+  /* hide desktop sidebar completely */
+  .sidebar {
+    display: none !important;
+    position: static !important;
+    width: 100% !important;
+    transform: none !important;
+  }
+
+  /* ensure offcanvas toggle is visible */
+  .navbar .btn.d-lg-none {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* main content takes full width */
+  .main-wrapper {
+    margin-left: 0 !important;
+    padding: 16px !important;
+  }
+
+  /* prevent any leftover left margin from other selectors */
+  body > .main-wrapper, .main-wrapper {
+    margin-left: 0 !important;
+  }
+
+  /* make offcanvas menu full height and width comfortable on mobile */
+  .offcanvas.offcanvas-start {
+    width: 78% !important;
+    max-width: 320px;
+  }
+}
+
+/* add near end of file */
+.user-avatar{
+  width:36px;
+  height:36px;
+  font-weight:700;
+  font-size:14px;
+  line-height:1;
+}
+.dropdown .dropdown-menu{
+  min-width:220px;
+  border-radius:10px;
+  overflow:hidden;
+}
+.dropdown .dropdown-item i{ width:18px; text-align:center; }

@@ -52,6 +52,10 @@ Route::post('/agent/ticket/{id}/close', [AgentTicketController::class, 'close'])
     ->name('agent.ticket.close')
     ->middleware('auth');
 
+    Route::post('/agent/ticket/{id}/Resolved', [AgentTicketController::class, 'Resolved'])
+    ->name('agent.ticket.Resolved')
+    ->middleware('auth');
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/ticket/check', [TicketController::class, 'showLookup'])->name('ticket.lookup');

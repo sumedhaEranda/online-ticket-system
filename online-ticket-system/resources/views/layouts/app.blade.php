@@ -6,30 +6,21 @@
   <title>@yield('title','Online Ticket System')</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    :root{--sidebar-bg:#1f2d3d;--sidebar-accent:#18232b;--link-color:#cfe2ff;}
-    html,body{height:100%;}
-    body{min-height:100vh;background:#f6f7fb;margin:0;}
-    .navbar { z-index: 2000; }
-    .dropdown-menu { z-index: 3000 !important; }
-    .sidebar {
-      position:fixed; top:56px; left:0; bottom:0; width:240px;
-      background:var(--sidebar-bg); color:#fff; overflow:auto; z-index:1000;
-    }
-    .sidebar .brand{padding:16px;font-weight:700;background:var(--sidebar-accent);color:var(--link-color)}
-    .sidebar .nav-link{color:var(--link-color) !important;padding:12px 18px;text-decoration:none !important}
-    .sidebar .nav-link:hover{background:rgba(255,255,255,0.03);color:#fff !important}
-    .main-wrapper { margin-top:56px; margin-left:240px; padding:24px; }
-    @media (max-width:991.98px){ .sidebar{display:none} .main-wrapper{margin-left:0} }
-  </style>
+  <!-- add bootstrap icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
   @stack('head')
 </head>
 <body>
 <nav class="navbar navbar-light bg-white border-bottom" style="height:56px">
   <div class="container-fluid">
     <div class="d-flex align-items-center gap-2">
-      <button class="btn btn-outline-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">☰</button>
-      <a class="navbar-brand mb-0 h5 ms-2" href="{{ url('/') }}">{{ config('app.name','Online TicketSystem') }}</a>
+      <button class="btn btn-outline-secondary d-lg-none" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar" aria-label="Open menu">
+        <i class="bi bi-list"></i>
+      </button>
+      <a class="navbar-brand mb-0 h5 ms-2" href="{{ url('/') }}" aria-label="{{ config('app.name','') }}"></a>
     </div>
 
     <div class="ms-auto">
@@ -37,18 +28,30 @@
         <a class="btn btn-sm btn-outline-primary" href="{{ route('login') }}">Login</a>
       @else
         <div class="dropdown">
-          <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-                  id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            {{ auth()->user()->name }}
+          <button class="btn btn-sm d-flex align-items-center gap-2" id="userDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="user-avatar rounded-circle bg-primary text-white d-inline-flex justify-content-center align-items-center">
+              {{ strtoupper(substr(auth()->user()->name,0,1)) }}
+            </span>
+            <span class="d-none d-md-inline fw-medium">{{ auth()->user()->name }}</span>
+            <i class="bi bi-chevron-down ms-1"></i>
           </button>
 
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg py-2" aria-labelledby="userDropdown">
+            <li class="px-3 py-2">
+              <div class="d-flex align-items-center">
+                <div class="user-avatar rounded-circle bg-primary text-white d-inline-flex justify-content-center align-items-center me-2">
+                  {{ strtoupper(substr(auth()->user()->name,0,1)) }}
+                </div>
+                <div>
+                  <div class="fw-bold small mb-0">{{ auth()->user()->name }}</div>
+                  <div class="text-muted small">{{ auth()->user()->email }}</div>
+                </div>
+              </div>
+            </li>
+            <li class="px-3">
               <form action="{{ route('logout') }}" method="POST" class="m-0">
                 @csrf
-                <button type="submit" class="dropdown-item">Logout</button>
+                <button type="submit" class="btn btn-sm btn-danger w-100"><i class="bi bi-box-arrow-right me-2"></i>Logout</button>
               </form>
             </li>
           </ul>
@@ -59,41 +62,66 @@
 </nav>
 
 <!-- Desktop sidebar -->
-<aside class="sidebar d-none d-lg-block">
-  <div class="brand">Dashboard</div>
-  <nav class="nav flex-column">
-    <a class="nav-link" href="{{ url('/home') }}">Overview</a>
-    <a class="nav-link" href="{{ url('/agent/tickets') }}#open">Open</a>
-    <a class="nav-link" href="{{ url('/agent/tickets') }}#solved">Solved</a>
-    <a class="nav-link" href="{{ url('/agent/tickets') }}#closed">Closed</a>
-    <a class="nav-link" href="{{ url('/agent/tickets') }}#pending">Pending</a>
+<aside id="appSidebar" class="sidebar d-none d-lg-block">
+  <div class="brand">
+    <div class="logo">OT</div>
+    <div class="brand-text">
+      <div>Online</div>
+      <div style="font-size:.85rem;color:var(--text-muted)">TicketSystem</div>
+    </div>
+
+    <button id="toggleSidebar" class="collapse-toggle" title="Toggle sidebar" aria-label="Toggle sidebar">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+  </div>
+
+  @auth
+  <div class="user">
+    <div class="avatar">{{ strtoupper(substr(auth()->user()->name,0,1)) }}</div>
+    <div class="meta">
+      <div class="name">{{ auth()->user()->name }}</div>
+      <div class="email">{{ auth()->user()->email }}</div>
+    </div>
+  </div>
+  @endauth
+
+  <nav class="nav flex-column px-2">
+    <a class="nav-link {{ request()->is('home') ? 'active' : '' }}" href="{{ url('/home') }}">
+      <i class="bi bi-speedometer2"></i><span class="label">Overview</span>
+    </a>
+
+    <a class="nav-link {{ request()->is('agent/tickets*') && request()->get('status') == 'Open' ? 'active' : '' }}" href="{{ url('/agent/tickets') }}#open">
+      <i class="bi bi-journal-text"></i><span class="label">Open</span>
+    </a>
   </nav>
 </aside>
 
 <!-- Mobile offcanvas -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+<div class="offcanvas offcanvas-start" id="mobileSidebar" tabindex="-1" aria-labelledby="mobileSidebarLabel">
   <div class="offcanvas-header" style="background:var(--sidebar-accent); color:var(--link-color);">
     <h5 class="offcanvas-title" id="mobileSidebarLabel">Menu</h5>
     <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body p-0" style="background:var(--sidebar-bg);min-height:100vh">
-    <div class="brand">Dashboard</div>
-    <nav class="nav flex-column">
-      <a class="nav-link" href="{{ url('/home') }}">Overview</a>
-      <a class="nav-link" href="{{ url('/agent/tickets') }}#open">Open</a>
-      <a class="nav-link" href="{{ url('/agent/tickets') }}#solved">Solved</a>
-      <a class="nav-link" href="{{ url('/agent/tickets') }}#closed">Closed</a>
-      <a class="nav-link" href="{{ url('/agent/tickets') }}#pending">Pending</a>
+    <div class="brand px-3 py-2 d-flex align-items-center">
+      <div class="logo me-2">OT</div>
+      <div class="brand-text">TicketSystem</div>
+    </div>
+    <nav class="nav flex-column px-2 mt-2">
+      <a class="nav-link" href="{{ url('/home') }}"><i class="bi bi-speedometer2 me-2"></i><span>Overview</span></a>
+      <a class="nav-link" href="{{ url('/agent/tickets') }}#open"><i class="bi bi-journal-text me-2"></i><span>Open</span></a>
     </nav>
   </div>
 </div>
 
+<!-- Main content -->
 <div class="main-wrapper">
   @yield('content')
 </div>
 
-<!-- At very end of body, before @stack('scripts') -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('js/sidebar.js') }}"></script>
 @stack('scripts')
 </body>
 </html>
