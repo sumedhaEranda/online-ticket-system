@@ -39,9 +39,14 @@ Send Reply
 
 </form>
 
-<form action="{{ route('agent.ticket.close', $ticket->id) }}" method="POST" onsubmit="return confirm('Close this ticket?');">
+<form action="{{ route('agent.ticket.close', $ticket->id) }}" method="POST" data-swal-confirm="true"
+      data-swal-title="Close ticket?"
+      data-swal-text="Are you sure you want to close this ticket? This action can be undone by support."
+      data-swal-confirm-button="Close"
+      data-swal-cancel-button="Cancel"
+      class="d-inline">
     @csrf
-    <button type="submit" class="btn btn-danger">Close Ticket</button>
+    <button type="submit" class="btn btn-danger btn-responsive">Close Ticket</button>
 </form>
 
 </div>

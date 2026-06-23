@@ -23,10 +23,8 @@ Route::post(
 
 Route::get('/ticket/status', [\App\Http\Controllers\TicketController::class, 'status'])->name('ticket.status');
 
-// Keep tokened public URL first
+// Public status URLs (no auth middleware)
 Route::get('/ticket/{reference}/{token}', [TicketController::class, 'publicView'])->name('ticket.public');
-
-// Fallback: allow public lookup by reference only
 Route::get('/ticket/{reference}', [TicketController::class, 'publicByReference'])->name('ticket.public.ref');
 
 Auth::routes();
@@ -55,3 +53,6 @@ Route::post('/agent/ticket/{id}/close', [AgentTicketController::class, 'close'])
     ->middleware('auth');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/ticket/check', [TicketController::class, 'showLookup'])->name('ticket.lookup');
+Route::post('/ticket/check', [TicketController::class, 'doLookup'])->name('ticket.lookup.post');

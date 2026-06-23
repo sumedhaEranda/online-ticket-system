@@ -17,7 +17,7 @@
 </style>
 @endpush
 
-@section('title','Overview')
+@section('title','Dashboard')
 
 @section('content')
 @if(session('success'))
@@ -75,13 +75,6 @@
         </div>
     </div>
 </div>
-
-<!-- Add a small lookup form (GET) anywhere on home/dashboard -->
-<form method="GET" action="{{ route('ticket.status') }}" class="d-flex gap-2">
-    <input name="reference_no" class="form-control" placeholder="Enter reference number" required>
-    <button class="btn btn-primary">Check Status</button>
-</form>
-<!-- ...existing code... -->
 
 <div class="card card-transparent">
     <div class="card-body p-2">

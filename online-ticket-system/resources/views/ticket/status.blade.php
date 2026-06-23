@@ -1,16 +1,32 @@
-@extends('layouts.app')
+@extends('layouts.public')
 
-@section('title','Ticket Status')
+@section('title', 'Ticket '.$ticket->reference_no)
 
 @section('content')
-<div class="container py-4">
-    <h5>Ref: {{ $ticket->reference_no }} — {{ $ticket->status }}</h5>
-    <p><strong>{{ $ticket->customer_name }}</strong> · {{ $ticket->email }} · {{ $ticket->phone }}</p>
-    <p>{{ $ticket->problem_description }}</p>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card text-center">
+        <div class="card-body">
+          <h4 class="mb-2">Reference</h4>
+          <h3 class="fw-bold">{{ $ticket->reference_no }}</h3>
 
-    <h6>Replies</h6>
-    @foreach($ticket->replies as $r)
-        <div class="card mb-2"><div class="card-body">{{ $r->message }} <div class="text-muted small">{{ $r->created_at }}</div></div></div>
-    @endforeach
+          <hr>
+
+          <h5 class="mb-0">Status</h5>
+          <p class="mt-1">
+            <span class="badge {{
+              $ticket->status === 'Open' ? 'bg-success' :
+              ($ticket->status === 'Pending' ? 'bg-warning text-dark' :
+              ($ticket->status === 'Resolved' ? 'bg-info text-dark' :
+              ($ticket->status === 'Closed' ? 'bg-secondary' : 'bg-light text-dark')))
+            }}">
+              {{ $ticket->status ?? 'Unknown' }}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 @endsection

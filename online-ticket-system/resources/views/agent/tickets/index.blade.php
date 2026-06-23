@@ -19,7 +19,7 @@
                 </select>
             </div>
             <div class="col-2 col-sm-2">
-                <button class="btn btn-primary btn-responsive" type="submit">Filter</button>
+                <button class="btn btn-primary btn-responsive" type="submit">Search</button>
             </div>
         </form>
     </div>

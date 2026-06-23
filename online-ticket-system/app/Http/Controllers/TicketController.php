@@ -12,7 +12,8 @@ class TicketController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // require auth for controller actions except public status pages
+        $this->middleware('auth')->except(['publicView', 'publicByReference']);
     }
 
     public function create()
@@ -52,21 +53,53 @@ class TicketController extends Controller
         $ticket = Ticket::with('replies.user')
                     ->where('reference_no', $reference)
                     ->where('access_token', $token)
-                    ->firstOrFail();
+                    ->first();
 
-        return view('ticket.status', compact('ticket'));
+        if (! $ticket) {
+            return redirect()->route('home')->with('error', 'Ticket not found.');
+        }
+
+        return view('ticket.status', compact('ticket'))->with('layout', 'layouts.public');
     }
 
     public function publicByReference($reference)
     {
-        $ticket = \App\Models\Ticket::with('replies.user')
+        $ticket = Ticket::with('replies.user')
                     ->where('reference_no', $reference)
                     ->first();
 
         if (! $ticket) {
-            return redirect()->route('home')->with('error', 'Ticket not found for reference: '.$reference);
+            return redirect()->route('home')->with('error', 'Ticket not found.');
         }
 
-        return view('ticket.status', compact('ticket'));
+        return view('ticket.status', compact('ticket'))->with('layout', 'layouts.public');
+    }
+
+    public function showLookup()
+    {
+        return view('ticket.lookup');
+    }
+
+    public function doLookup(Request $request)
+    {
+        $data = $request->validate([
+            'reference_no' => 'required|string'
+        ]);
+
+        $reference = trim($data['reference_no']);
+
+        // Try token route first if exists, otherwise public by reference
+        $ticket = Ticket::where('reference_no', $reference)->first();
+
+        if (! $ticket) {
+            return redirect()->back()->withErrors(['reference_no' => 'Ticket not found for this reference number.']);
+        }
+
+        // prefer token URL if token exists
+        if (!empty($ticket->access_token)) {
+            return redirect()->route('ticket.public', ['reference' => $ticket->reference_no, 'token' => $ticket->access_token]);
+        }
+
+        return redirect()->route('ticket.public.ref', ['reference' => $ticket->reference_no]);
     }
 }

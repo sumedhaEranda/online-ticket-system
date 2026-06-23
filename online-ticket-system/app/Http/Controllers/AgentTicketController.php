@@ -7,7 +7,6 @@ use App\Models\TicketReply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketReplyMail;
-use App\Http\Requests\StoreTicketReplyRequest;
 
 class AgentTicketController extends Controller
 {
@@ -46,17 +45,19 @@ class AgentTicketController extends Controller
         return view('agent.tickets.show', ['ticket' => $ticket]);
     }
 
-    public function reply(StoreTicketReplyRequest $request, $id)
+    public function reply(Request $request, $id)
     {
+        $request->validate(['message'=>'required|string|min:1']);
+
         $ticket = Ticket::findOrFail($id);
 
         $reply = TicketReply::create([
             'ticket_id' => $ticket->id,
-            'user_id' => auth()->id(),
-            'message' => $request->message
+            'user_id'   => auth()->id(),
+            'message'   => $request->message,
         ]);
 
-        $ticket->update(['status' => 'Pending', 'viewed' => 1]);
+        $ticket->update(['status' => 'Pending', 'viewed' => 0]);
 
         try {
             Mail::to($ticket->email)->send(new TicketReplyMail($ticket, $reply));
@@ -64,7 +65,7 @@ class AgentTicketController extends Controller
             \Log::error('Reply email failed: '.$e->getMessage());
         }
 
-        return redirect()->back()->with('success','Reply sent.');
+        return redirect()->back()->with('success','Reply sent and customer notified.');
     }
     
     public function close(Request $request, $id)
