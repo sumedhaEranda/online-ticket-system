@@ -57,7 +57,7 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 
 ## 📱 Non-Functional Requirements
 
-* Responsive UI (Mobile / Desktop)
+* Responsive UI (Mobile /tablet/ Desktop)
 * Fast interaction using AJAX where applicable
 * input validation on all forms
 * Secure handling of user data and ticket references
@@ -85,6 +85,10 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 ---
 ### 📱 Mobile View
 ![Mobile View](screenshots/Mobile_View.jpg)
+------
+
+### 📱 Tablet View
+![tablet View](screenshots/tablet_View.jpg)
 ---
 
 ### 🎫 Ticket Creation Page
