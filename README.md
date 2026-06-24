@@ -80,22 +80,24 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 ## 📸 Screenshots
 
 ### 🖥️ Desktop View
+![Desktop View](screenshots/Desktop_view.jpg)
 
 ---
-
 ### 📱 Mobile View
-
+![Mobile View](screenshots/Desktop_view.jpg)
 ---
 
 ### 🎫 Ticket Creation Page
+![Ticket Form](screenshots/Ticket_creation_page(Gest).jpg)
 
 ---
 
 ### 📩 Ticket Reply View
-
+![Reply View](screenshots/Ticket_reply_page.jpg)
 ---
 
 ### 📩 Ticket Status View
+![Reply View](screenshots/Ticket_status_check_page.jpg)
 
 ---
 
