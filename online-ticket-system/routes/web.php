@@ -11,6 +11,19 @@ Route::post(
     [TicketController::class,'store']
 )->name('ticket.store');
 
+// Public alias for guest ticket submissions (same controller method)
+Route::post('/ticket/public/store', [TicketController::class, 'store'])->name('ticket.public.store');
+
+// make GET requests to this path redirect to the public create form
+Route::get('/ticket/public/store', function () {
+    return redirect()->route('ticket.create');
+});
+
+Route::get(
+    '/ticket/public/create',
+    [TicketController::class, 'publicCreate']
+)->name('ticket.public.create');
+
 Route::get(
     '/ticket/status',
     [TicketController::class,'statusForm']
@@ -23,8 +36,10 @@ Route::post(
 
 Route::get('/ticket/status', [\App\Http\Controllers\TicketController::class, 'status'])->name('ticket.status');
 
-// Public status URLs (no auth middleware)
-Route::get('/ticket/{reference}/{token}', [TicketController::class, 'publicView'])->name('ticket.public');
+// tokened public URL
+Route::get('/ticket/{reference}/token/{token}', [TicketController::class, 'publicView'])->name('ticket.public');
+
+//  public lookup by reference only
 Route::get('/ticket/{reference}', [TicketController::class, 'publicByReference'])->name('ticket.public.ref');
 
 Auth::routes();
@@ -52,11 +67,9 @@ Route::post('/agent/ticket/{id}/close', [AgentTicketController::class, 'close'])
     ->name('agent.ticket.close')
     ->middleware('auth');
 
-    Route::post('/agent/ticket/{id}/Resolved', [AgentTicketController::class, 'Resolved'])
+ Route::post('/agent/ticket/{id}/Resolved', [AgentTicketController::class, 'Resolved'])
     ->name('agent.ticket.Resolved')
     ->middleware('auth');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/ticket/check', [TicketController::class, 'showLookup'])->name('ticket.lookup');
-Route::post('/ticket/check', [TicketController::class, 'doLookup'])->name('ticket.lookup.post');
+ 

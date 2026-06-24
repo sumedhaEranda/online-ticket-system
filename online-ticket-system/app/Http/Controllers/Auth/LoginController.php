@@ -4,24 +4,30 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
+    /**
+     * Handle user authentication (login).
+     * Uses the AuthenticatesUsers trait provided by Laravel.
+     */
     use AuthenticatesUsers;
 
+    /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
     protected $redirectTo = '/home';
 
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-    }
-
-    /**
-     * Ensure user always goes to /home after successful login.
-     */
-    protected function authenticated(Request $request, $user)
-    {
-        return redirect()->intended('/home');
+        $this->middleware('auth')->only('logout');
     }
 }

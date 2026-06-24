@@ -11,7 +11,6 @@ use App\Models\TicketReply;
 class TicketReplyMail extends Mailable
 {
     use Queueable, SerializesModels;
-
     public Ticket $ticket;
     public TicketReply $reply;
 
@@ -25,10 +24,6 @@ class TicketReplyMail extends Mailable
     {
         return $this->subject('Reply to your ticket — Ref: '.$this->ticket->reference_no)
                     ->view('emails.ticket_reply')
-                    ->with([
-                        'ticket' => $this->ticket,
-                        'reply'  => $this->reply,
-                        'link'   => url('/ticket/'.$this->ticket->reference_no.'/'.($this->ticket->access_token ?? '')),
-                    ]);
+                    ->with(['ticket' => $this->ticket, 'reply' => $this->reply]);
     }
 }

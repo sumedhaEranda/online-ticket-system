@@ -17,6 +17,25 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    (function(){
+        @if(session('success'))
+            Swal.fire({ icon: 'success', title: 'Success', text: {!! json_encode(session('success')) !!}, timer: 3500 });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({ icon: 'error', title: 'Error', text: {!! json_encode(session('error')) !!} });
+        @endif
+
+        @if ($errors->any())
+            Swal.fire({ icon: 'warning', title: 'Validation errors', html: ('<ul style="text-align:left;">' + {!! json_encode(implode('', $errors->all('<li>:message</li>'))) !!} + '</ul>'), width: 600 });
+        @endif
+    })();
+  </script>
+
   @stack('scripts')
 </body>
 </html>

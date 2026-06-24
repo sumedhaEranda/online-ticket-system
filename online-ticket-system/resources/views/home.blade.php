@@ -1,11 +1,10 @@
+
 @extends('layouts.app')
 
 @section('title','Dashboard')
 
 @push('head')
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
 .page-title {
@@ -73,24 +72,31 @@
 @endphp
 
 <!-- HEADER -->
-<div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-2 gap-1">
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3 gap-3">
 
-    <div>
+    
+    <div class="d-flex flex-column gap-2">
+
         @auth
-            <a href="{{ route('ticket.create') }}" class="btn btn-primary mb-1">
+            <a href="{{ route('ticket.create') }}" class="btn btn-primary w-fit">
                 <i class="bi bi-plus-lg me-1"></i> New Ticket
             </a>
         @else
-            <a href="{{ route('login') }}" class="btn btn-outline-primary mb-1">
+            <a href="{{ route('login') }}" class="btn btn-outline-primary w-fit">
                 <i class="bi bi-box-arrow-in-right me-1"></i> Login
             </a>
         @endauth
 
-        <h4 class="page-title mb-0">Tickets Dashboard</h4>
+        <h4 class="page-title mb-0">Tickets List</h4>
         <div class="text-muted small">Manage and track customer support requests</div>
+
+        
     </div>
 
- <div class="d-flex gap-3 align-items-center search-controls">
+
+
+</div>
+<div class="d-flex gap-3 align-items-center search-controls">
     
     <div style="min-width:160px;">
         <select id="statusFilter" class="form-select form-select-sm">
@@ -116,8 +122,6 @@
             <i class="bi bi-x-lg"></i>
         </button>
     </div>
-
-</div>
 
 </div>
 
@@ -254,3 +258,4 @@ $(function(){
 });
 </script>
 @endpush
+

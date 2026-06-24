@@ -6,14 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\Ticket;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 use App\Mail\TicketCreated;
 
 class TicketController extends Controller
 {
     public function __construct()
     {
-        // require auth for controller actions except public status pages
-        $this->middleware('auth')->except(['publicView', 'publicByReference']);
+        
+        $this->middleware('auth')->except([
+            'create', 'store', 'publicView', 'publicByReference',
+            'status', 'statusForm', 'checkStatus'
+        ]);
     }
 
     public function create()
@@ -23,28 +27,51 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'customer_name'      => 'required|string|max:255',
             'email'              => 'required|email|max:255',
-            'phone'              => 'nullable|string|max:30',
+            'phone'              => ['required','regex:/^(07[0-9]{8}|\+94[0-9]{9})$/'],
             'problem_description'=> 'required|string|min:10',
         ]);
 
+        // Tickets inputs
+        $data = [
+            'customer_name' => trim(strip_tags($validated['customer_name'])),
+            'email' => trim($validated['email']),
+            'phone' => trim($validated['phone']),
+            'problem_description' => trim(strip_tags($validated['problem_description'])),
+        ];
+
         $data['reference_no'] = strtoupper(Str::random(8));
-        // remove or comment out the next line if not using access_token:
-        // $data['access_token'] = Str::random(48);
         $data['status'] = 'Open';
         $data['viewed'] = 0;
 
-        $ticket = Ticket::create($data);
-
-        try {
-            Mail::to($ticket->email)->send(new TicketCreated($ticket));
-        } catch (\Throwable $e) {
-            \Log::error('Ticket ack email failed: '.$e->getMessage());
+        if (! auth()->check() && Schema::hasColumn('tickets', 'access_token')) {
+            $data['access_token'] = Str::random(48);
         }
 
-        return redirect()->route('home')->with('success', 'Ticket created. Reference: '.$ticket->reference_no);
+        try {
+            $ticket = Ticket::create($data);
+
+            try {
+                Mail::to($ticket->email)->send(new TicketCreated($ticket));
+            } catch (\Throwable $e) {
+                \Log::error('Ticket ack email failed: '.$e->getMessage());
+            }
+
+            // below use SweetAlert2
+            session()->flash('success', 'Ticket created successfully');
+
+            if (! auth()->check()) {
+                return view('ticket.success', compact('ticket'));
+            }
+
+            return redirect()->route('home')->with('success', 'Ticket created. Reference: '.$ticket->reference_no);
+
+        } catch (\Exception $e) {
+            \Log::error('Ticket create failed: '.$e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Failed to create ticket, please try again later.');
+        }
     }
 
     // public token-protected view
@@ -53,53 +80,30 @@ class TicketController extends Controller
         $ticket = Ticket::with('replies.user')
                     ->where('reference_no', $reference)
                     ->where('access_token', $token)
-                    ->first();
+                    ->firstOrFail();
 
-        if (! $ticket) {
-            return redirect()->route('home')->with('error', 'Ticket not found.');
-        }
-
-        return view('ticket.status', compact('ticket'))->with('layout', 'layouts.public');
+        return view('ticket.status', compact('ticket'));
     }
 
     public function publicByReference($reference)
     {
-        $ticket = Ticket::with('replies.user')
+        $ticket = \App\Models\Ticket::with('replies.user')
                     ->where('reference_no', $reference)
                     ->first();
 
         if (! $ticket) {
-            return redirect()->route('home')->with('error', 'Ticket not found.');
+            return redirect()->route('home')->with('error', 'Ticket not found for reference: '.$reference);
         }
 
-        return view('ticket.status', compact('ticket'))->with('layout', 'layouts.public');
+        return view('ticket.status', compact('ticket'));
     }
 
-    public function showLookup()
+    public function publicCreate()
     {
-        return view('ticket.lookup');
+        //  public create form 
+        return view('ticket.public_create');
     }
 
-    public function doLookup(Request $request)
-    {
-        $data = $request->validate([
-            'reference_no' => 'required|string'
-        ]);
+    
 
-        $reference = trim($data['reference_no']);
-
-        // Try token route first if exists, otherwise public by reference
-        $ticket = Ticket::where('reference_no', $reference)->first();
-
-        if (! $ticket) {
-            return redirect()->back()->withErrors(['reference_no' => 'Ticket not found for this reference number.']);
-        }
-
-        // prefer token URL if token exists
-        if (!empty($ticket->access_token)) {
-            return redirect()->route('ticket.public', ['reference' => $ticket->reference_no, 'token' => $ticket->access_token]);
-        }
-
-        return redirect()->route('ticket.public.ref', ['reference' => $ticket->reference_no]);
-    }
 }
