@@ -119,7 +119,7 @@ url:- http://localhost:8000/
 **1. Clone the Repository**
 
 ```bash
-git clone (https://github.com/sumedhaEranda/online-ticket-system.git)
+git clone https://github.com/sumedhaEranda/online-ticket-system.git
 cd support-ticket-system
 
 ```
