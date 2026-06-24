@@ -87,7 +87,7 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 ---
 
 ### 🎫 Ticket Creation Page
-![Ticket Form](screenshots/Ticket_Creation_Page.jpg)
+![Ticket Form](screenshots/Ticket_creation_page(Gest).jpg)
 
 ---
 
