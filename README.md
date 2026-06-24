@@ -92,8 +92,68 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 ---
 
 ### 📩 Ticket Reply View
-![Reply View](screenshots/Ticket_Reply_View.jpg)
+![Reply View](screenshots/Ticket_reply_page.jpg)
 ---
 
 ### 📩 Ticket Status View
 ![Reply View](screenshots/Ticket_status_check_page.jpg)
+
+
+---
+
+## 🧪 How to Run the Project (Local Setup)
+
+### 1. Clone the project
+```bash
+git clone https://github.com/your-repo/support-ticket-system.git
+
+Download the SQL and create tables on your computer using MySQL  
+Database Tables.sql
+
+2. Install Dependencies
+
+composer install
+npm install
+npm run dev
+
+3. Configure Environment
+
+Copy .env.example → .env
+
+DB_DATABASE=support_ticket_system
+DB_USERNAME=root
+DB_PASSWORD=
+
+MAIL_MAILER=smtp
+MAIL_HOST=your_host
+MAIL_PORT=587
+MAIL_USERNAME=your_email
+MAIL_PASSWORD=your_password
+MAIL_ENCRYPTION=tls
+
+4. Generate Key
+php artisan key:generate
+
+
+5. Run Migration
+php artisan migrate
+
+6. Start Server
+php artisan serve
+
+🔐 Security Features
+Secure random reference numbers
+Authentication for agents
+Input validation on all forms
+Protected routes
+💡 Assumptions
+Guest users can create tickets without login
+One ticket can have multiple replies
+Email system is properly configured
+Reference number is the only access key for customers
+✨ Future Improvements
+File attachments in tickets
+Live chat system
+Admin analytics dashboard
+Priority-based ticket system
+SLA tracking
