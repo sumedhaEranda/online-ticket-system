@@ -88,6 +88,9 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 ---
 
 ### 🎫 Ticket Creation Page
+
+url:- http://localhost:8000/
+
 ![Ticket Form](screenshots/Ticket_creation_page(Gest).jpg)
 
 ---
@@ -117,7 +120,7 @@ cd support-ticket-system
 
 ```
 
-**3. Database Setup**
+**2. Database Setup**
 
 Create a MySQL database named:
 `support_ticket_system`
@@ -125,7 +128,11 @@ Create a MySQL database named:
 Import the provided SQL file:
 `Database Tables.sql`
 
-**3. Install Dependencies**
+**3. Database ER Diagram**
+
+![](screenshots/ER_Diagram.jpg)
+
+**4. Install Dependencies**
 
 ```bash
 composer install
@@ -163,7 +170,7 @@ MAIL_FROM_NAME="Online Ticket System"
 
 Update the database and mail configuration:
 
-**5. Generate Application Key**
+**6. Generate Application Key**
 
 * `php artisan key:generate`
 * Then add the `APP_KEY=`
@@ -175,16 +182,20 @@ php artisan migrate
 
 ```
 
-**9. Start the Development Server**
+**8. Start the Development Server**
 
 ```bash
 php artisan serve
 
 ```
 
-The application will be available at :
+**9. The application will be available at**
+
 
 `http://localhost:8000/login`
+
+### Support Agent Portal 
+![Support Agent Portal](screenshots/login.jpg)
 
 ---
 
