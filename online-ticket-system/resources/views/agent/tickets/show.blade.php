@@ -170,7 +170,15 @@
 
                 <div class="card-body">
 
-                    <form id="replyForm"
+                      @php
+                        $isResolved = ($ticket->status === 'Resolved');
+                        $isClosed = ($ticket->status === 'Closed');
+                        $disableReply = $isResolved || $isClosed;
+                        $disableResolve = $isResolved || $isClosed;
+                        $disableClose = $isClosed;
+                      @endphp
+
+                      <form id="replyForm"
                           action="/agent/ticket/{{ $ticket->id }}/reply"
                           method="POST">
 
@@ -182,15 +190,22 @@
                                 rows="5"
                                 class="form-control"
                                 placeholder="Type your reply here..."
-                                required></textarea>
+                                @if($disableReply) disabled @else required @endif>{{ old('message') }}</textarea>
                         </div>
+
+                        @if($disableReply)
+                            <div class="alert alert-warning small">
+                                Replies are disabled for tickets that are {{ $ticket->status }}.
+                            </div>
+                        @endif
 
                         <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
 
                             <div>
                                 <button id="sendReplyBtn"
                                         type="submit"
-                                        class="btn btn-primary">
+                                        class="btn btn-primary"
+                                        @if($disableReply) disabled @endif>
                                     <i class="bi bi-send me-1"></i>
                                     Send Reply
                                 </button>
@@ -225,7 +240,7 @@
                               data-swal-cancel-button="Cancel">
                             @csrf
 
-                            <button type="submit" class="btn btn-success">
+                            <button type="submit" class="btn btn-success" @if($disableResolve) disabled @endif>
                                 <i class="bi bi-check-circle-fill me-1"></i>
                                 Mark as Resolved
                             </button>
@@ -240,7 +255,7 @@
                               data-swal-cancel-button="Cancel">
                             @csrf
 
-                            <button type="submit" class="btn btn-danger">
+                            <button type="submit" class="btn btn-danger" @if($disableClose) disabled @endif>
                                 <i class="bi bi-lock-fill me-1"></i>
                                 Close Ticket
                             </button>

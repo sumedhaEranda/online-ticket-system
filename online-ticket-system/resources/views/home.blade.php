@@ -7,50 +7,98 @@
 <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 
 <style>
+body {
+    background: #f5f7fb;
+}
+
+/* Page enter animation */
+.page-enter {
+    animation: pageFade 0.6s ease;
+}
+
+@keyframes pageFade {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Success alert animation */
+.alert-success {
+    border-radius: 10px;
+    animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Page title */
 .page-title {
     font-weight: 700;
-    letter-spacing: .2px;
+    color: #111827;
 }
 
+/* Card */
 .card-modern {
-    border-radius: 10px;
-    box-shadow: 0 6px 18px rgba(22,28,40,.06);
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    overflow: hidden;
 }
 
+/* Table header */
 .table thead th {
-    background: #f8f9fa;
-    border-bottom: 2px solid #dee2e6 !important;
+    background: #f8fafc;
     font-weight: 600;
+    color: #374151;
+    border-bottom: 2px solid #e5e7eb !important;
 }
 
-.table-bordered td,
-.table-bordered th {
-    border-color: #e9ecef !important;
+/* Row hover */
+.table-hover tbody tr {
+    transition: 0.2s;
 }
 
 .table-hover tbody tr:hover {
-    background-color: #f6f9ff;
-    transition: 0.2s ease;
+    background: #eef4ff;
+    transform: scale(1.01);
 }
 
-.search-controls .form-control {
-    min-width: 220px;
+/* Search bar */
+.search-controls {
+    background: #fff;
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05);
 }
 
-@media (max-width:768px){
-    .search-controls {
-        flex-direction: column;
-        gap: .5rem;
-    }
-    .search-controls .form-control {
-        width: 100% !important;
-    }
+/* Buttons */
+.btn-primary {
+    border-radius: 10px;
+    font-weight: 600;
+    transition: 0.2s;
 }
 
+.btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+/* Badges */
 .badge {
-    font-weight: 500;
+    border-radius: 8px;
     padding: 6px 10px;
-    border-radius: 6px;
 }
 </style>
 @endpush

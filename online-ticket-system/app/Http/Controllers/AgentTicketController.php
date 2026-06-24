@@ -7,6 +7,7 @@ use App\Models\TicketReply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketReplyMail;
+use App\Mail\TicketStatusMail;
 use App\Http\Requests\StoreTicketReplyRequest;
 
 class AgentTicketController extends Controller
@@ -75,6 +76,12 @@ class AgentTicketController extends Controller
         $ticket->status = 'Closed';
         $ticket->save();
 
+        try {
+            Mail::to($ticket->email)->send(new TicketStatusMail($ticket, 'Closed'));
+        } catch (\Throwable $e) {
+            \Log::error('Status email (Closed) failed: '.$e->getMessage());
+        }
+
         return redirect()->back()->with('success', 'Ticket closed.');
     }
 
@@ -85,6 +92,12 @@ class AgentTicketController extends Controller
         try {
             $ticket->status = 'Resolved';
             $ticket->save();
+            try {
+                Mail::to($ticket->email)->send(new TicketStatusMail($ticket, 'Resolved'));
+            } catch (\Throwable $e) {
+                \Log::error('Status email (Resolved) failed: '.$e->getMessage());
+            }
+
             return redirect()->back()->with('success', 'Ticket marked as Resolved.');
         } catch (\Exception $e) {
             \Log::error('Failed to mark ticket resolved: '.$e->getMessage());

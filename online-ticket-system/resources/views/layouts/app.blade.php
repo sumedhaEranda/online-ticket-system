@@ -40,7 +40,7 @@
 
         <div class="ms-auto">
             @guest
-                <a class="btn btn-sm btn-outline-primary" href="{{ route('login') }}">Login</a>
+                
             @else
                 <div class="dropdown d-inline">
                     <button class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
