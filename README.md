@@ -84,7 +84,7 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 
 ---
 ### 📱 Mobile View
-![Mobile View](screenshots/Desktop_view.jpg)
+![Mobile View](screenshots/Mobile_View.jpg)
 ---
 
 ### 🎫 Ticket Creation Page
