@@ -130,7 +130,7 @@ Import the provided SQL file:
 
 **3. Database ER Diagram**
 
-![](screenshots/ER_Diagram.jpg)
+![](screenshots/ER_Diagram.png)
 
 **4. Install Dependencies**
 
@@ -195,7 +195,7 @@ php artisan serve
 `http://localhost:8000/login`
 
 ### Support Agent Portal 
-![Support Agent Portal](screenshots/login.jpg)
+![Support Agent Portal](screenshots/Login.jpg)
 
 ---
 
