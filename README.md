@@ -25,7 +25,7 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 
 ---
 
-### 🧑‍💼 Support Agent Features
+###  Support Agent Features
 
 - Secure login system for agents
 - View all submitted tickets
@@ -100,60 +100,87 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 
 
 ---
+🧪 How to Run the Project (Local Setup)
 
-## 🧪 How to Run the Project (Local Setup)
+1. Clone the Repository
+git clone https://github.com/your-username/support-ticket-system.git
 
-### 1. Clone the project
-```bash
-git clone https://github.com/your-repo/support-ticket-system.git
+cd support-ticket-system
 
-Download the SQL and create tables on your computer using MySQL  
+3. Database Setup
+
+Create a MySQL database named:
+
+support_ticket_system
+
+Import the provided SQL file:
+
 Database Tables.sql
 
-2. Install Dependencies
-
+3. Install Dependencies
+   
 composer install
 npm install
 npm run dev
 
-3. Configure Environment
+5. Configure Environment
 
-Copy .env.example → .env
+Create .env file and paste
 
-DB_DATABASE=support_ticket_system
+DB_DATABASE=online_ticket_system
 DB_USERNAME=root
 DB_PASSWORD=
 
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost
+
+
 MAIL_MAILER=smtp
-MAIL_HOST=your_host
+MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=your_email
-MAIL_PASSWORD=your_password
+MAIL_USERNAME=your email
+MAIL_PASSWORD=password
 MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your email
+MAIL_FROM_NAME="Online Ticket System"
 
-4. Generate Key
-php artisan key:generate
+Update the database and mail configuration:
 
 
-5. Run Migration
+5. Generate Application Key
+   
+- php artisan key:generate
+
+- Then add the APP_KEY=
+
+7. Run Database Migrations
+   
 php artisan migrate
 
-6. Start Server
+9. Start the Development Server
+    
 php artisan serve
 
-🔐 Security Features
-Secure random reference numbers
-Authentication for agents
-Input validation on all forms
-Protected routes
-💡 Assumptions
-Guest users can create tickets without login
-One ticket can have multiple replies
-Email system is properly configured
-Reference number is the only access key for customers
-✨ Future Improvements
-File attachments in tickets
-Live chat system
-Admin analytics dashboard
-Priority-based ticket system
-SLA tracking
+The application will be available at:
+
+http://127.0.0.1:8000
+
+### Security Features
+
+- Secure random ticket reference numbers
+- Authentication for support agents
+- Form input validation
+- CSRF protection
+- Protected routes and middleware
+- Eloquent ORM protection against SQL injection
+
+### Assumptions
+
+- Guest users can create support tickets without logging in.
+- A single ticket can have multiple replies.
+- SMTP email service is properly configured.
+- Customers access their tickets using the generated reference number.
+- Support agents manage tickets through a secured dashboard.
