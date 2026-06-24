@@ -94,6 +94,12 @@ Each ticket is assigned a **unique reference number**, which customers can use t
 
 ### 📩 Ticket Reply View
 ![Reply View](screenshots/Ticket_reply_page.jpg)
+
+---
+
+### 📩 Send email to customer 
+![Reply View](screenshots/Succes_email.jpg)
+
 ---
 
 ### 📩 Ticket Status View
